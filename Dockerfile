@@ -1,5 +1,10 @@
 FROM ubuntu:22.10
 
+# Get Environment Variables
+ARG SSHUSER
+ARG SSHPASS
+
+# Update the Ubuntu
 RUN apt-get update
 
 # Python Interpreter and Package Manager
@@ -15,7 +20,7 @@ RUN apt-get install build-essential
 
 # SSH Server
 RUN apt-get install -y openssh-server
-RUN echo 'root:password' | chpasswd
+RUN echo '${SSHUSER}:${SSHPASS}' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
